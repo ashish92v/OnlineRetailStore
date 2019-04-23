@@ -116,6 +116,21 @@ form.example::after {
     <link rel="stylesheet" href="${pageContext.request.contextPath}/newResource2/vendor/owl.carousel/assets/owl.theme.default.css">
 
    <script>
+   function saveRegistration(){
+   	alert("hey");
+   	if(isNotEmpty('name', 'Please enter username.'))
+   	{
+   	if(isNotEmpty('email', 'Please enter email.'))
+   	{
+  	if(isNotEmpty('password', 'Please enter password.'))
+   	{
+  		document.saveRegistrationDetails.submit();
+   	}
+  		}
+   	return false;
+   	
+   }
+   
    
    
    function searchProduct(){
@@ -261,21 +276,21 @@ form.example::after {
                 <p class="lead">Not our registered customer yet?</p>
                 <p>With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
                 <hr>
-                <form action="customer-orders.html" method="post">
+                <form action="registrationPage" id="registrationPage" name="registrationPage" method="post">
                   <div class="form-group">
                     <label for="name">Name</label>
-                    <input id="name" type="text" class="form-control">
+                    <input id="name" name="name" type="text" class="form-control">
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input id="email" type="text" class="form-control">
+                    <input id="email" name="email" type="text" class="form-control">
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input id="password" type="password" class="form-control">
+                    <input id="password" name="password" type="password" class="form-control">
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i> Register</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-user-md" onclick="return saveRegistration();"></i> Register</button>
                   </div>
                 </form>
               </div>

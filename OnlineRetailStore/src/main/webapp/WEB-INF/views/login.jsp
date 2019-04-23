@@ -8,14 +8,25 @@
 <script type="text/javascript"  src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 <!------ Include the above in your HEAD tag ---------->
 <script src="${pageContext.request.contextPath}/jquery/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/onlineretail.js"></script>
 
 <script src="${pageContext.request.contextPath}/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
 <script type="text/javascript">
+function isNotEmpty(inputId, errorMsg) {
+	   var inputElement = document.getElementById(inputId);
+	   var errorElement = document.getElementById(inputId + "Error");
+	   var inputValue = inputElement.value.trim();
+	   var isValid = (inputValue.length != 0);  // boolean
+	   showMessage(isValid, inputElement, errorMsg, errorElement);
+	   return isValid;
+	}
+
 
 
 </script>
+
 
 <style>
  body {
@@ -163,11 +174,31 @@ form.example::after {
 
 <script>
 
-    $(document).ready(function(){
+/*     $(document).ready(function(){
     	  $("button").click(function(){
-    	  alert("hey"); 
+    	  document.contactForm.loginButton.value;
+                  form1.submit()
+    		  
+    		  
+    		  alert("hey"); 
     	  });
     	});
+ */    
+    function checkLoginCredentials(){
+    	alert("hey");
+    	if(isNotEmpty('username', 'Please enter username.'))
+    	{
+   		if(isNotEmpty('password', 'Please enter password.'))
+    	{
+   		document.checklogin.submit();
+    	}
+   		}
+    	return false;
+    	
+    }
+    
+    
+    
     
 </script>
 
@@ -328,12 +359,12 @@ form.example::after {
 				<div class="col-lg-6">
 					<div class="login_form_inner">
 						<h3>Log in to enter</h3>
-						<form class="row login_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
+						<form class="row login_form" action="checklogin" method="POST" name="checklogin"  id="checklogin" novalidate="novalidate">
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="name" name="name" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+								<input type="text" class="form-control" id="username" name="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
 							</div>
 							<div class="col-md-12 form-group">
-								<input type="text" class="form-control" id="name" name="name" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+								<input type="text" class="form-control" id="password" name="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
 							</div>
 							<div class="col-md-12 form-group">
 								<div class="creat_account">
@@ -342,7 +373,7 @@ form.example::after {
 								</div>
 							</div>
 							<div class="col-md-12 form-group">
-								<button type="submit" value="submit" class="primary-btn">Log In</button>
+								<button type="submit" value="submit" id="loginButton"  name="loginButton" class="primary-btn" onclick="return checkLoginCredentials();">Log In</button>
 								<a href="#">Forgot Password?</a>
 							</div>
 						</form>
