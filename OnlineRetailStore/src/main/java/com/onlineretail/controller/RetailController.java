@@ -210,18 +210,30 @@ public class RetailController {
 	        String product="";
 	        
 	        try{
-		        if(productId!=null && productId!="" && !productId.equalsIgnoreCase("ALL")){
-		        	System.out.println("productId"+productId);
+	
+/*
+		        String prod=login.getAllGadget("phone");
+		        System.out.println("prod"+prod);	        
+*/		
+	        	if(productId!=null && productId!="" && !productId.equalsIgnoreCase("ALL")){
+		
+	        		productId=productId.trim();
+			        product=login.getAllGadget(productId);
+			        System.out.println("productId"+productId);	        
+	        		
+	        		/*System.out.println("productId"+productId);
 		        	product="{\"gadget\": [{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" }]}";
-			    		
+			    	*/	
 		        }
 		        else{
-		        	System.out.println("productId"+productId);
+		        	product=login.getAllGadget("ALL");
+			        System.out.println("productId"+productId);	       
+/*		        	System.out.println("productId"+productId);
 		        	product="{\"gadget\": [{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" }]}";
-		        }
+*/		        }
 		        System.out.println("getBatchListAction result "+product);
 		    
-		        JSONArray jsonarray = new JSONArray();
+/*		        JSONArray jsonarray = new JSONArray();
 				DBCollection collection = mongoOperation.getCollection("gadget");
 				DBCursor cursor = collection.find();
 				JSONObject jsonobj = null;
@@ -230,17 +242,19 @@ public class RetailController {
 				{
 					jsonobj= new JSONObject();
 					BasicDBObject obj = (BasicDBObject) cursor.next();
-				    System.out.println("Data "+obj.getString("gadgetUrl"));
-				    jsonobj.put("gadgetUrl", obj.getString("gadgetUrl"));
+					System.out.println("Data "+obj.getString("gadgetUrl"));
+					jsonobj.put("gadgetId", obj.getString("_id"));
 				    jsonobj.put("gadgetName", obj.getString("gadgetName"));
+				    jsonobj.put("gadgetUrl", obj.getString("gadgetUrl"));
+				    jsonobj.put("gadgetPrice", obj.getString("gadgetPrice"));
 				    jsonarray.put(jsonobj);
 				}
 				  
 				product=jsonarray.toString();
 				product="{"+"\"gadget\""+":"+product+"}";
-				System.out.println("data in string"+product );
+*/				System.out.println("data in string"+product );
 						
-				System.out.println("json"+jsonarray);
+//				System.out.println("json"+jsonarray);
 		        
 	        }catch(Exception e){
 	        	e.printStackTrace();
@@ -249,6 +263,9 @@ public class RetailController {
 	        return product;
 	        }
 
+	
+	
+	
 	
 	
 }

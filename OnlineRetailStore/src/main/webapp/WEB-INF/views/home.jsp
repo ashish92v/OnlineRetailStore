@@ -77,24 +77,25 @@
 
 <script>
 
-    $(document).ready(function(){
+/*     $(document).ready(function(){
     	  $("button").click(function(){
     	  alert("hey"); 
     	  });
-    	});
+    	}); */
     
 </script>
 
 <script>
-function productModal(image){
-	var product="LG";
+function productModal(id,product,image,price){
+	/* var product="LG";
 	var id="LGas";
 	var price="352";
-//function productModal(id,product,image,price){
+ *///function productModal(id,product,image,price){
+	/* alert('product'+product);
 	alert('image'+image);
 	 alert('id'+id);
 	alert('price'+price);
-	
+	 */
 	
 var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 	'    <div class="modal-content">'+
@@ -234,7 +235,7 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 	    	productId : productId,	    		
 	    },
 	    success : function(result){
-	    alert("result1"+result);
+//	    alert("result1"+result);
 	  //  alert(result.length);
 	    obj = JSON.parse(result);
 	    console.log("obj"+obj);
@@ -307,16 +308,18 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 
 		'<ul class="cd-items cd-container">';
 	  	  
-	alert("json***********************"+obj);
+	//alert("json***********************"+obj);
 	 for (i in obj.gadget) {
 	//  	alert("json***********************"+ obj.gadget[i].gadgetUrl);
 		//count++;
-	  	gadgetUrl=obj.gadget[i].gadgetUrl;
+	  	gadgetId=obj.gadget[i].gadgetId;
        gadgetName=obj.gadget[i].gadgetName;
+       gadgetUrl=obj.gadget[i].gadgetUrl;
+       gadgetPrice=obj.gadget[i].gadgetPrice;
 
-       alert("gadgetUrl"+gadgetUrl);
+      // alert("gadgetUrl"+gadgetUrl);
 	  htmlCode= htmlCode+'<li class="cd-item"><img src="${pageContext.request.contextPath}/'+gadgetUrl+'" alt="Item Preview">'+
-    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetUrl+'\')">Quick View</a></li>';
+    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\')">Quick View</a></li>';
 /* 	  function productModal(id,productName,image,price){  	  
   	   
 	  }
@@ -456,56 +459,223 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 		 productId="ALL";
 	 }
 	  	 
-	 alert("productId"+productId);
+//	 alert("productId"+productId);
+
 	 
-     $.ajax({
-	    type : "GET",
-	    url  : "getProduct",
-	    data :
-	    {
-	    	productId : productId,	    		
-	    },
-	    success : function(result){
-	//    alert("result1"+result);
-	 //   alert(result.length);
-	    obj = JSON.parse(result);
-	    console.log("obj"+obj);
+	   $.ajax({
+		    type : "GET",
+		    url  : "getProduct",
+		    data :
+		    {
+		    	productId : productId,	    		
+		    },
+		    success : function(result){
+//		    alert("result1"+result);
+		  //  alert(result.length);
+		    obj = JSON.parse(result);
+		    console.log("obj"+obj);
 
-		  var size = Object.size(obj);
-		    console.log("obj"+size);
-	//	    alert("size"+size);
-	    
-	    
-	    
-		 initialCode='<ul class="cd-items cd-container">';
+		  //  alert("test");
+			 initialCode='<div class="container">'+
+		       '<div class="row">'+
+		       '<div class="col-lg-12">'+
+		         '<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">'+
+		           '<ol class="carousel-indicators">'+
+		             '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>'+
+		             '<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>'+
+		             '<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>'+
+		           '</ol>'+
+		           '<div class="carousel-inner" role="listbox">'+
+		             '<div class="carousel-item active">'+
+		               '<img class="d-block img-fluid" src="${pageContext.request.contextPath}/img/drone.jpg" alt="First slide">'+
+		             '</div>'+
+		             '<div class="carousel-item">'+
+		               '<img class="d-block img-fluid"  src="${pageContext.request.contextPath}/img/background.jpg" alt="Second slide">'+
+		             '</div>'+
+		              '<div class="carousel-item">'+
+		               '<img class="d-block img-fluid" src="${pageContext.request.contextPath}/img/drone1.jpg" alt="Third slide">'+
+		             '</div>'+
+		           '</div>'+
+		           '<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">'+
+		             '<span class="carousel-control-prev-icon" aria-hidden="true"></span>'+
+		             '<span class="sr-only">Previous</span>'+
+		           '</a>'+
+		           '<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">'+
+		             '<span class="carousel-control-next-icon" aria-hidden="true"></span>'+
+		             '<span class="sr-only">Next</span>'+
+		           '</a>'+
+		         '</div>'+
+		       '</div>'+
+		'</div>'+
 
-//	alert("json***********************"+obj);
-	 for (i in obj.gadget) {
-	//  	alert("json***********************"+ obj.gadget[i].gadgetUrl);
-		count++;
-	  	gadgetUrl=obj.gadget[i].gadgetUrl;
-       gadgetName=obj.gadget[i].name;
 
-  //     alert("gadgetUrl"+gadgetUrl+"  gadgetName   "+gadgetName);
+		'<div id="advantages" >'+
+		         '<div class="container">'+
+		           '<div class="row mb-4">'+
+		             '<div class="col-md-4">'+
+		               '<div class="box clickable d-flex flex-column justify-content-center mb-0 h-100">'+
+		                 '<div class="icon"><i class="fa fa-heart"></i></div>'+
+		                 '<h3><a href="#">We love our customers</a></h3>'+
+		                 '<p class="mb-0">We are known to provide best possible service ever</p>'+
+		               '</div>'+
+		             '</div>'+
+		             '<div class="col-md-4">'+
+		               '<div class="box clickable d-flex flex-column justify-content-center mb-0 h-100">'+
+		                 '<div class="icon"><i class="fa fa-tags"></i></div>'+
+		                 '<h3><a href="#">Best prices</a></h3>'+
+		                 '<p class="mb-0">You can check that the height of the boxes adjust when longer text like this one is used in one of them.</p>'+
+		               '</div>'+
+		             '</div>'+
+		             '<div class="col-md-4">'+
+		              ' <div class="box clickable d-flex flex-column justify-content-center mb-0 h-100">'+
+		                ' <div class="icon"><i class="fa fa-thumbs-up"></i></div>'+
+		                 '<h3><a href="#">100% satisfaction guaranteed</a></h3>'+
+		                 '<p class="mb-0">Free returns on everything for 3 months.</p>'+
+		               '</div>'+
+		             '</div>'+
+		           '</div>'+
+		         '</div>'+
+		       '</div>'+
 
-  
-  
-  htmlCode= htmlCode+'<li class="cd-item"><img src="${pageContext.request.contextPath}/'+gadgetUrl+'" alt="Item Preview">'+
-	'<a href="#0" class="cd-trigger">Quick View</a>'+
-	'</li>'; <!-- cd-item -->
-  
-       }
 
-      finalCode=initialCode+htmlCode+'</ul>';
 
-      alert("FinalHtmlCode"+finalCode);
-      
-      document.getElementById("demo").innerHTML = finalCode;
-}
-	  }); 
- 	}
-     
-      
+		'<br><br><br>'+
+
+			'<ul class="cd-items cd-container">';
+		  	  
+		alert("json***********************"+obj);
+		 for (i in obj.gadget) {
+		//  	alert("json***********************"+ obj.gadget[i].gadgetUrl);
+			//count++;
+		  	gadgetId=obj.gadget[i].gadgetId;
+	       gadgetName=obj.gadget[i].gadgetName;
+	       gadgetUrl=obj.gadget[i].gadgetUrl;
+	       gadgetPrice=obj.gadget[i].gadgetPrice;
+
+	       alert("gadgetUrl"+gadgetUrl);
+		  htmlCode= htmlCode+'<li class="cd-item"><img src="${pageContext.request.contextPath}/'+gadgetUrl+'" alt="Item Preview">'+
+	    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\')">Quick View</a></li>';
+	/* 	  function productModal(id,productName,image,price){  	  
+	  	   
+		  }
+	 */
+	  	     /*  finalCode=initialCode+htmlCode+'</ul></div></div>'+
+	  	      */ 
+
+	  	      
+	  	      finalCode=initialCode+htmlCode+'</ul></div>';
+	/*   	      finalCode=initialCode+htmlCode+'</ul></div>'+
+			'<!-- Modal: modalQuickView -->'+
+			'<div class="modal fade" id="modalQuickView" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"'+
+			'  aria-hidden="true">'+
+			'  <div class="modal-dialog modal-lg" role="document">'+
+			'    <div class="modal-content">'+
+			'      <div class="modal-body">'+
+			'        <div class="row">'+
+			'          <div class="col-lg-5">'+
+			'            <!--Carousel Wrapper-->'+
+			'            <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails"'+
+			'              data-ride="carousel">'+
+			'              <!--Slides-->'+
+			'              <div class="carousel-inner" role="listbox">'+
+			'                <div class="carousel-item active">'+
+			'                  <img class="d-block w-100"'+
+			'                    src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/img%20(23).jpg"'+
+			'                    alt="First slide">'+
+			'                </div>'+
+			'                <div class="carousel-item">'+
+			'                  <img class="d-block w-100"'+
+			'                    src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/img%20(24).jpg"'+
+			'                    alt="Second slide">'+
+			'                </div>'+
+			'                <div class="carousel-item">'+
+			'                  <img class="d-block w-100"'+
+			'                    src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/img%20(25).jpg"'+
+			'                    alt="Third slide">'+
+			'                </div>'+
+			'              </div>'+
+			'              <!--/.Slides-->'+
+			'              <!--Controls-->'+
+			'              <a class="carousel-control-prev" href="#carousel-thumb" role="button" data-slide="prev">'+
+			'                <span class="carousel-control-prev-icon" aria-hidden="true"></span>'+
+			'                <span class="sr-only">Previous</span>'+
+			'              </a>'+
+			'              <a class="carousel-control-next" href="#carousel-thumb" role="button" data-slide="next">'+
+			'                <span class="carousel-control-next-icon" aria-hidden="true"></span>'+
+			'                <span class="sr-only">Next</span>'+
+			'              </a>'+
+			'              <!--/.Controls-->'+
+			'             </div>'+
+			'            <!--/.Carousel Wrapper-->'+
+			'          </div>'+
+			'          <div class="col-lg-7">'+
+			'            <h2 class="h2-responsive product-name">'+
+			'              <strong>Product Name</strong>'+
+			'            </h2>'+
+			'            <h4 class="h4-responsive">'+
+			'              <span class="green-text">'+
+			'                <strong>$49</strong>'+
+			'              </span>'+
+			'              <span class="grey-text">'+
+			'                <small>'+
+			'                  <s>$89</s>'+
+			'                </small>'+
+			'              </span>'+
+			'            </h4>'+
+			'            <!--Accordion wrapper-->'+
+			'            <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">'+
+			'              <!-- Accordion card -->'+
+			'              <div class="card">'+
+			'                <!-- Card header -->'+
+			'                <div class="card-header" role="tab" id="headingOne1">'+
+			'                  <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true"'+
+			'                    aria-controls="collapseOne1">'+
+			'                    <h5 class="mb-0">'+
+			'                      Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>'+
+			'                    </h5>'+
+			'                  </a>'+
+			'                </div>'+
+			'                <!-- Card body -->'+
+			'                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1"'+
+			'                  data-parent="#accordionEx">'+
+			'                  <div class="card-body">'+
+			'                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad'+
+			'                    squid. 3'+
+			'                    wolf moon officia aute,'+
+			'                    non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.'+
+			'                  </div>'+
+			'                </div>'+
+			'              </div>'+
+			'            </div>'+
+			'            <!-- Accordion wrapper -->'+
+			'            <!-- Add to Cart -->'+
+			'            <div class="card-body">'+
+			'              <div class="text-center">'+
+			'                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'+
+			'                <button class="btn btn-primary">Add to cart'+
+			'                  <i class="fas fa-cart-plus ml-2" aria-hidden="true"></i>'+
+			'                </button>'+
+			'              </div>'+
+			'            </div>'+
+			'            <!-- /.Add to Cart -->'+
+			'          </div>'+
+			'        </div>'+
+			'      </div>'+
+			'    </div>'+
+			'  </div>'+
+			'</div>';
+	 */  	      
+
+	  	  //    alert("FinalHtmlCode"+finalCode);
+	  	      
+	  	      document.getElementById("demo").innerHTML = finalCode;
+		 }
+		 }
+		  }); 
+
+	   
+	   }
+	 
     </script>
 </head>
 
@@ -524,10 +694,10 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
       
       
         
-        <form action="#" method="post" class="form-inline my-2 mylg-0">
+        <form action="#" method="get" class="form-inline my-2 mylg-0">
                    <input type="search" name="productId" id="productId" class="form-control mr-sm-2" placeholder="search product" aria-label="Buscar">
 		           <input type="hidden" name="producthidden" id="producthidden" class="form-control mr-sm-2"  aria-label="Buscar">
-                <button class="btn btn-primary" type="submit">Search</button>
+                <button class="btn btn-primary" type="submit" onclick="searchProduct()">Search</button>
          </form></div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
