@@ -8,7 +8,6 @@ import com.onlineretail.pojo.Product;
 import com.onlineretail.pojo.User;
 import com.onlineretail.util.Mapper;
 import com.onlineretail.util.Result;
-import com.sun.istack.internal.NotNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,6 @@ public class BackendServiceImpl implements BackendService {
     private String imagesEndpoint = "images";
     private String usersEndpoint = "users";
 
-    @NotNull
     public Result<List<Product>> getSampleProducts(int amount) {
         String samplesURL = baseURL + productsEndpoint + "?$sample=" + amount; //"https://mt7.duckdns.org/api/v1/products?$sample=18";
         ResponseEntity<String> response = fetchJSON(samplesURL);
