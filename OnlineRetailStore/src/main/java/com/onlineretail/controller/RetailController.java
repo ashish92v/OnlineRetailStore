@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.onlineretail.pojo.Category;
 import com.onlineretail.pojo.Product;
 import com.onlineretail.service.BackendService;
 import com.onlineretail.util.Result;
@@ -130,18 +131,6 @@ public class RetailController {
 	}
 */
 
-
-	@RequestMapping(value = "/hometest", method = RequestMethod.GET)
-	public String homeTest(ModelMap model) {
-		Result<List<Product>> results = backendService.getSampleProducts(20);
-		if (results.isError()){
-			//log or return error
-			return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
-		}else{
-			model.addAttribute("sampleproducts", results.getValue());
-			return "home2";
-		}
-	}
 
 	public Login checkAccountCookie(HttpServletRequest request){
 		Cookie[] cookies= request.getCookies();
@@ -285,9 +274,25 @@ public class RetailController {
 	        return product;
 	        }
 
-	
-	
-	
-	
-	
+
+
+
+	@RequestMapping(value = "/hometest", method = RequestMethod.GET)
+	public String homeTest(ModelMap model) {
+		Result<List<Product>> results = backendService.getSampleProducts(20);
+		//Result<List<Product>> results = backendService.getProducts("?categories=5c9668945801bc84144575fe");
+		//Result<Product> productResult = backendService.getProduct("5c966ef05801bc841446755e");
+        //Result<List<Category>> results = backendService.getSampleCategories(20);
+        // Result<List<String>> results = backendService.getImageNamesForProduct("5c966ef05801bc841446755e");
+
+		if (results.isError()){
+			//log or return error
+			return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
+		}else{
+			model.addAttribute("sampleproducts", results.getValue());
+			return "home2";
+		}
+	}
+
+
 }

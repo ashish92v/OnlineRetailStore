@@ -415,7 +415,14 @@
 
 <div id=demo>
 
-    ${sampleproducts}
+    <ul class="cd-items cd-container">';
+        <c:forEach var="product" items="${sampleproducts}">
+            <li class="cd-item">
+                <img src="https://mt7.duckdns.org/api/v1/images/${product.id}/${product.images[0].get("name")}?height=68&width=68" alt="Item Preview" width="68" height="68">
+                <a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(${product.id}, ${product.name}, 'https://mt7.duckdns.org/api/v1/images/${product.id}/${product.images[0].get("name")}',${product.price})">Quick View</a>
+            </li>
+        </c:forEach>
+    </ul>
 </div>
 
 <!-- Modal: modalQuickView -->
