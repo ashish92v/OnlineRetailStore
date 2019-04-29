@@ -4,6 +4,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.onlineretail.pojo.Category;
+import com.onlineretail.pojo.Product;
+import com.onlineretail.service.BackendService;
+import com.onlineretail.util.Result;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +28,16 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.onlineretail.pojo.Login;
 import com.onlineretail.service.LoginService;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/hello")
+//@RequestMapping("/hello")
 
 public class RetailController {
 	@Autowired LoginService login;
+	@Autowired BackendService backendService;
 //	HttpSession session=null;
 	
 	ApplicationContext ctx = 
@@ -120,7 +129,9 @@ public class RetailController {
 	//	model.addAttribute("message", "Hello Spring WEB MVC!");
 		return "home";
 	}
-*/	
+*/
+
+
 	public Login checkAccountCookie(HttpServletRequest request){
 		Cookie[] cookies= request.getCookies();
 		Login login= null;
@@ -226,11 +237,11 @@ public class RetailController {
 			    	*/	
 		        }
 		        else{
-		        	product=login.getAllGadget("ALL");
+		        	//product=login.getAllGadget("ALL");
 			        System.out.println("productId"+productId);	       
-/*		        	System.out.println("productId"+productId);
+		        	//System.out.println("productId"+productId);
 		        	product="{\"gadget\": [{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" }]}";
-*/		        }
+		        }
 		        System.out.println("getBatchListAction result "+product);
 		    
 /*		        JSONArray jsonarray = new JSONArray();
@@ -263,9 +274,25 @@ public class RetailController {
 	        return product;
 	        }
 
-	
-	
-	
-	
-	
+
+
+
+	@RequestMapping(value = "/hometest", method = RequestMethod.GET)
+	public String homeTest(ModelMap model) {
+		Result<List<Product>> results = backendService.getSampleProducts(20);
+		//Result<List<Product>> results = backendService.getProducts("?categories=5c9668945801bc84144575fe");
+		//Result<Product> productResult = backendService.getProduct("5c966ef05801bc841446755e");
+        //Result<List<Category>> results = backendService.getSampleCategories(20);
+        // Result<List<String>> results = backendService.getImageNamesForProduct("5c966ef05801bc841446755e");
+
+		if (results.isError()){
+			//log or return error
+			return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
+		}else{
+			model.addAttribute("sampleproducts", results.getValue());
+			return "home2";
+		}
+	}
+
+
 }
