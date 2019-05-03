@@ -1,5 +1,7 @@
 package com.onlineretail.controller;
 
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	public class RetailController {
 		@Autowired LoginService login;
 	//	HttpSession session=null;
+		@Autowired BackendService backendService;
+
 		
 		ApplicationContext ctx = 
 				new AnnotationConfigApplicationContext(Config.class);
@@ -107,14 +111,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 					 
 					 isLoginSuccessful=true; 
 					 Integer productCount=login.productCount(login1.getId());
-					 System.out.println("basdjk");
 					 modelMap.addAttribute("count",productCount);
 					 result= "home";
 					 modelMap.addAttribute("msg","");
 				 }
 				 
 			}else{
-				System.out.println("basdjk1");
 			//	modelMap.put("error", "Invalid Account");
 				modelMap.addAttribute("count",0);
 				 modelMap.addAttribute("user",LoggedInUser);			
@@ -131,13 +133,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		}
 		
 		
-	/*	@RequestMapping(value = "/checklogin", method = RequestMethod.POST)
-		public String login1(@RequestParam String username ,@RequestParam String password) {
-			System.out.println("login:  "+ "username "+username+" password "+ password);
-		//	model.addAttribute("message", "Hello Spring WEB MVC!");
-			return "home";
-		}
-	*/	
 		public Login checkAccountCookie(HttpServletRequest request){
 			Cookie[] cookies= request.getCookies();
 			Login login= null;
@@ -490,9 +485,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			return samePassword;
 		}
-
-		
-		
 		
 		@RequestMapping(value = "/register", method = RequestMethod.GET)
 		public String register(ModelMap model) {
@@ -640,4 +632,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			return "forgotPassword";
 		}	
+
+	@RequestMapping(value = "/hometest", method = RequestMethod.GET)
+	public String homeTest(ModelMap model) {
+		Result<List<Product>> results = backendService.getSampleProducts(20);
+		//Result<List<Product>> results = backendService.getProducts("?categories=5c9668945801bc84144575fe");
+		//Result<Product> productResult = backendService.getProduct("5c966ef05801bc841446755e");
+        //Result<List<Category>> results = backendService.getSampleCategories(20);
+        // Result<List<String>> results = backendService.getImageNamesForProduct("5c966ef05801bc841446755e");
+
+		if (results.isError()){
+			//log or return error
+			return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
+		}else{
+			model.addAttribute("sampleproducts", results.getValue());
+			return "home2";
+		}
 	}
+
+
+}
