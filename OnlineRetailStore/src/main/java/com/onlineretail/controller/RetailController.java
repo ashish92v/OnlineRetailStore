@@ -5,13 +5,13 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import com.onlineretail.pojo.Category;
-import com.onlineretail.pojo.Login;
 import com.onlineretail.pojo.Product;
 import com.onlineretail.service.BackendService;
-import com.onlineretail.service.LoginService;
 import com.onlineretail.util.Result;
+
+import com.onlineretail.pojo.Login;
+import com.onlineretail.service.LoginService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 	public class RetailController {
 		@Autowired LoginService login;
-	//	HttpSession session=null;
 		@Autowired BackendService backendService;
-
+	//	HttpSession session=null;
 		
 		ApplicationContext ctx = 
 				new AnnotationConfigApplicationContext(Config.class);
@@ -53,11 +52,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 					System.out.println("session+++++"+session);
 					sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"Guest";
 					System.out.println("sessionCheck");
-					if(sessionCheck!=null && session.getAttribute("userId")!=null){
-						String UserId=session.getAttribute("userId")!=null?session.getAttribute("userId").toString():"0";
+					if(sessionCheck!=null){
+						String UserId=session.getAttribute("userId").toString();
 						String name=session.getAttribute("name").toString();
-						System.out.println("UserId"+UserId);
-						System.out.println("name"+name);
 						Integer productCount=login.productCount(UserId);
 						model.addAttribute("count",productCount);
 						model.addAttribute("user",name);
@@ -66,6 +63,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 						System.out.println("userlogin if block");
 						model.addAttribute("user","Guest");
 					}
+
+					
 				}else{
 					model.addAttribute("count",0);
 					System.out.println("userlogin if block");
@@ -133,6 +132,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		}
 		
 		
+	/*	@RequestMapping(value = "/checklogin", method = RequestMethod.POST)
+		public String login1(@RequestParam String username ,@RequestParam String password) {
+			System.out.println("login:  "+ "username "+username+" password "+ password);
+		//	model.addAttribute("message", "Hello Spring WEB MVC!");
+			return "home";
+		}
+	*/	
 		public Login checkAccountCookie(HttpServletRequest request){
 			Cookie[] cookies= request.getCookies();
 			Login login= null;
@@ -485,6 +491,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			return samePassword;
 		}
+
+		
+		
 		
 		@RequestMapping(value = "/register", method = RequestMethod.GET)
 		public String register(ModelMap model) {
@@ -632,23 +641,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			return "forgotPassword";
 		}	
+		
+		@RequestMapping(value = "/hometest", method = RequestMethod.GET)
+		public String homeTest(ModelMap model) {
+			Result<List<Product>> results = backendService.getSampleProducts(20);
+			//Result<List<Product>> results = backendService.getProducts("?categories=5c9668945801bc84144575fe");
+			//Result<Product> productResult = backendService.getProduct("5c966ef05801bc841446755e");
+	        //Result<List<Category>> results = backendService.getSampleCategories(20);
+	        // Result<List<String>> results = backendService.getImageNamesForProduct("5c966ef05801bc841446755e");
 
-	@RequestMapping(value = "/hometest", method = RequestMethod.GET)
-	public String homeTest(ModelMap model) {
-		Result<List<Product>> results = backendService.getSampleProducts(20);
-		//Result<List<Product>> results = backendService.getProducts("?categories=5c9668945801bc84144575fe");
-		//Result<Product> productResult = backendService.getProduct("5c966ef05801bc841446755e");
-        //Result<List<Category>> results = backendService.getSampleCategories(20);
-        // Result<List<String>> results = backendService.getImageNamesForProduct("5c966ef05801bc841446755e");
-
-		if (results.isError()){
-			//log or return error
-			return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
-		}else{
-			model.addAttribute("sampleproducts", results.getValue());
-			return "home2";
+			if (results.isError()){
+				//log or return error
+				return "error";  //note: this is not a valid url. Need to figure what we want to do if we fail to get sample data
+			}else{
+				model.addAttribute("sampleproducts", results.getValue());
+				return "home2";
+			}
 		}
-	}
-
-
 }
