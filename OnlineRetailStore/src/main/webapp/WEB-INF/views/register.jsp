@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Register</title>
 <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <!-- <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script type="text/javascript"  src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
@@ -52,15 +53,15 @@ form.example::after {
 }
 </style>
 
-<script>
+<!-- <script>
 
     $(document).ready(function(){
     	  $("button").click(function(){
-    	  alert("hey"); 
+    	//  alert("hey"); 
     	  });
     	});
     
-</script>
+</script> -->
 
 <style>
 
@@ -118,13 +119,15 @@ form.example::after {
    <script>
    function saveRegistration(){
    	alert("hey");
-   	if(isNotEmpty('name', 'Please enter username.'))
+   	if(isNotEmpty('firstName', 'Please enter firstName.'))
+   	{
+   	if(isNotEmpty('lastName', 'Please enter lastName.'))
    	{
    	if(isNotEmpty('email', 'Please enter email.'))
    	{
   	if(isNotEmpty('password', 'Please enter password.'))
    	{
-  		document.saveRegistrationDetails.submit();
+  		document.registrationPage.submit();
    	}
   		}
    	return false;
@@ -217,7 +220,11 @@ form.example::after {
      
       
     </script>
- 
+ <script>
+  function hideMessage(){
+ 	$('#messageBox').hide();
+ }
+ 	</script>
 
 
 </head>
@@ -229,14 +236,6 @@ form.example::after {
         </button>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
         <br>
         <div></div>
-        <div>
-      		
-        
-        <form action="#" method="get" class="form-inline my-2 mylg-0">
-                <input type="search" name="productId" id="productId" class="form-control mr-sm-2" placeholder="Buscar em todo o site" aria-label="Buscar">
-                <input type="hidden" name="producthidden" id="producthidden" class="form-control mr-sm-2" placeholder="Buscar em todo o site" aria-label="Buscar">
-                <button class="btn btn-primary" type="submit" onclick="return searchProduct();" >Search</button>
-        </form></div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -253,16 +252,7 @@ form.example::after {
                 <a href="#" class="nav-item active nav-link">About us</a>
 
 
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle active" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a href="saveAccout" class="dropdown-item">My Account</a>
-                        <a href="cart" class="dropdown-item">Order</a>
-                        <a href="login" class="dropdown-item">Login</a>
-                    </div>
-                </li>
-            </ul>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-   <div id="basket-overview" class="navbar-collapse collapse d-none d-lg-block"><a href="cart" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span>3 items in cart</span></a></div>
+                       </ul>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
         
         </div>
     </nav>
@@ -271,23 +261,28 @@ form.example::after {
     <div class="container">
       <div class="row">
          <div class="col-lg-9">
+         <div id="messageBox" ><h4 style="color:red;">${message}</h4 > </div>
               <div class="box">
                 <h1>New account</h1>
                 <p class="lead">Not our registered customer yet?</p>
                 <p>With registration with us new world of fashion, fantastic discounts and much more opens to you! The whole process will not take you more than a minute!</p>
                 <hr>
-                <form action="registrationPage" id="registrationPage" name="registrationPage" method="post">
+                <form action="registrationPage" id="registrationPage" name="registrationPage" method="get">
                   <div class="form-group">
-                    <label for="name">Name</label>
-                    <input id="name" name="name" type="text" class="form-control">
+                    <label for="name">FirstName</label>
+                    <input id="firstName" name="firstName" type="text" class="form-control" onclick="hideMessage()">
+                  </div>
+                  <div class="form-group">
+                    <label for="name">LastName</label>
+                    <input id="lastName" name="lastName" type="text" class="form-control" onclick="hideMessage()">
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input id="email" name="email" type="text" class="form-control">
+                    <input id="email" name="email" type="text" class="form-control" onclick="hideMessage()">
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input id="password" name="password" type="password" class="form-control">
+                    <input id="password" name="password" type="password" class="form-control" onclick="hideMessage()">
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-user-md" onclick="return saveRegistration();"></i> Register</button>
