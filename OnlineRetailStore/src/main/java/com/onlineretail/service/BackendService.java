@@ -2,6 +2,7 @@ package com.onlineretail.service;
 
 import com.onlineretail.pojo.Category;
 import com.onlineretail.pojo.Product;
+import com.onlineretail.pojo.User;
 import com.onlineretail.util.Result;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public interface BackendService {
     Result<String> loginUser(String email, String password); //TODO: Add abilityh to return an error
 
     void logoutUser(String token); //We should just clear the user session
+
+    Result<User> getUserInfo(String token);
 
     Result<List<Map<String, Integer>>> getUserCart(String userToken);
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlineretail.pojo.Category;
 import com.onlineretail.pojo.Gadget;
 import com.onlineretail.pojo.Product;
+import com.onlineretail.pojo.User;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +66,17 @@ public class Mapper {
         try {
             Category parsedCategory = mapper.readValue(json, Category.class);
             return parsedCategory;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static User jsonToUser(String json){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            User parsedUser = mapper.readValue(json, User.class);
+            return parsedUser;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

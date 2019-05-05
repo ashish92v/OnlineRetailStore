@@ -8,10 +8,7 @@ import com.onlineretail.pojo.Product;
 import com.onlineretail.pojo.User;
 import com.onlineretail.util.Mapper;
 import com.onlineretail.util.Result;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -124,10 +121,10 @@ public class BackendServiceImpl implements BackendService {
             newUser.setEmail(email);
             newUser.setPassword(password);
             ResponseEntity<String> response = restTemplate.postForEntity(uri, newUser, String.class);
-            if (response.getStatusCode() != HttpStatus.OK || response.getStatusCode() != HttpStatus.CREATED){
+            if (response.getStatusCode() != HttpStatus.OK){
                 return Result.error(response.getStatusCode().value());
             }
-            return Result.ok(response.getBody());
+            return Result.ok(extractToken(response.getBody()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
@@ -143,18 +140,36 @@ public class BackendServiceImpl implements BackendService {
             existingUser.setEmail(email);
             existingUser.setPassword(password);
             ResponseEntity<String> response = restTemplate.postForEntity(uri, existingUser, String.class);
-            if (response.getStatusCode() == HttpStatus.BAD_REQUEST){
+            if (response.getStatusCode() == HttpStatus.BAD_REQUEST || response.getStatusCode() != HttpStatus.OK){
                 return Result.error(response.getStatusCode().value());
             }
-            return Result.ok(response.getBody());
+            return Result.ok(extractToken(response.getBody()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return null;
+            return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
 
     public void logoutUser(String token) {
         //no-op
+    }
+    public Result<User> getUserInfo(String token){
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String userInfoURL = baseURL + usersEndpoint + "/" + "info";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            ResponseEntity<String> response =  restTemplate.exchange(userInfoURL, HttpMethod.GET, new HttpEntity("parameters", headers), String.class);
+            if (response.getStatusCode() != HttpStatus.OK){
+                return Result.error(response.getStatusCode().value());
+            }
+            User user = Mapper.jsonToUser(response.getBody());
+            return Result.ok(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
     }
 
     public Result<List<Map<String, Integer>>> getUserCart(String userToken) {
@@ -173,5 +188,17 @@ public class BackendServiceImpl implements BackendService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return response;
+    }
+
+    private String extractToken(String jsonString){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode root = mapper.readTree(jsonString);
+            String token = root.get("token").textValue();
+            return token;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -7,14 +7,12 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import com.onlineretail.pojo.Category;
-import com.onlineretail.pojo.Gadget;
-import com.onlineretail.pojo.Product;
+
+import com.onlineretail.pojo.*;
 import com.onlineretail.service.BackendService;
 import com.onlineretail.util.Mapper;
 import com.onlineretail.util.Result;
 
-import com.onlineretail.pojo.Login;
 import com.onlineretail.service.LoginService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		ApplicationContext ctx = 
 				new AnnotationConfigApplicationContext(Config.class);
 		MongoOperations mongoOperation = (MongoOperations) ctx.getBean("mongoTemplate");
+
+		boolean useLocalHost = false; //true: use local database and url. false: use remote database and url
 		
 		
 		@RequestMapping(value = "/shop", method = RequestMethod.GET)
@@ -91,39 +91,75 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		@RequestMapping(value = "/checklogin", method = RequestMethod.POST)
 		public String login1(@RequestParam("username") String username,@RequestParam("password") String password,
 			HttpSession session,ModelMap modelMap) {
+			if (useLocalHost){
+				return doLocalLogin(username, password, session, modelMap);
+			}else {
+				return doRemoteLogin(username, password, session, modelMap);
+			}
+		}
+
+		private String doLocalLogin(String username, String password, HttpSession session,ModelMap modelMap){
 			Login user=null;
 			String LoggedInUser="";
 			Login login1=new Login();
 			boolean isLoginSuccessful=false;
 			String result="login";
-			 modelMap.addAttribute("msg","Invalid Credentials");			
+			modelMap.addAttribute("msg","Invalid Credentials");
 			if(username!=null && username!="" && password!=null && password!=""){
-				 user= new Login(username, password);
-				 login1=login.getUser(user);
-				
-				 if(login1!=null){
-					 System.out.println("LoggedInUser : "+login1.getFirstname());
-					 System.out.println("LoggedInUser : "+login1.getId());
-					 session.setAttribute("userId", login1.getId());
-					 session.setAttribute("username", login1.getEmail());
-					 session.setAttribute("name", login1.getFirstname());
-					 modelMap.addAttribute("user",login1.getFirstname());
-					 
-					 isLoginSuccessful=true; 
-					 Integer productCount=login.productCount(login1.getId());
-					 modelMap.addAttribute("count",productCount);
-					 result= "home";
-					 modelMap.addAttribute("msg","");
-				 }
-				 
+				user= new Login(username, password);
+				login1=login.getUser(user);
+
+				if(login1!=null){
+					System.out.println("LoggedInUser : "+login1.getFirstname());
+					System.out.println("LoggedInUser : "+login1.getId());
+					session.setAttribute("userId", login1.getId());
+					session.setAttribute("username", login1.getEmail());
+					session.setAttribute("name", login1.getFirstname());
+					modelMap.addAttribute("user",login1.getFirstname());
+
+					isLoginSuccessful=true;
+					Integer productCount=login.productCount(login1.getId());
+					modelMap.addAttribute("count",productCount);
+					result= "home";
+					modelMap.addAttribute("msg","");
+				}
+
 			}else{
-			//	modelMap.put("error", "Invalid Account");
+				//	modelMap.put("error", "Invalid Account");
 				modelMap.addAttribute("count",0);
-				 modelMap.addAttribute("user",LoggedInUser);			
+				modelMap.addAttribute("user",LoggedInUser);
 				result= "login";
-			
+
 			}
 			return result;
+		}
+
+		private String doRemoteLogin(String username, String password, HttpSession session,ModelMap modelMap){
+
+			Result<String> result = backendService.loginUser(username, password);
+			if (result.isError()){
+				modelMap.addAttribute("count",0);
+				modelMap.addAttribute("user","");
+				return "login";
+			}
+
+			Result<User> userResult = backendService.getUserInfo(result.getValue());
+			if (userResult.isError()){
+				modelMap.addAttribute("count",0);
+				modelMap.addAttribute("user","");
+				return "login";
+			}
+
+			User userInfo = userResult.getValue();
+
+			session.setAttribute("userId", userInfo.getId());
+			session.setAttribute("username", userInfo.getEmail());
+			session.setAttribute("name", userInfo.getFirstName());
+			session.setAttribute("token", result.getValue());
+			modelMap.addAttribute("user",userInfo.getFirstName());
+
+			return "home";
+
 		}
 
 		@RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -526,25 +562,46 @@ import org.springframework.web.bind.annotation.ResponseBody;
 		
 		@RequestMapping(value = "/registrationPage", method = RequestMethod.GET)
 		public String register(ModelMap model,@RequestParam String firstName,@RequestParam String lastName ,@RequestParam String email,@RequestParam String password) {
+			if (useLocalHost){
+				return doLocalRegister(model, firstName, lastName, email, password);
+			}else{
+				return doRemoteRegister(model, firstName, lastName, email, password);
+			}
+		}
+
+		private String doLocalRegister(ModelMap model, String firstName, String lastName , String email,  String password){
 			System.out.println("firstName "+ firstName + " lastName " + lastName + " email "+ email +" password "+password);
 			String response="";
 			String request="login";
 			if(firstName !=null && lastName!="" && email!=null && email!="" && password!=null && password!=""){
-				 response=login.saveLogin(firstName , lastName , email, password);
-				 
-				 
-				 System.out.println("response"+response);
+				response=login.saveLogin(firstName , lastName , email, password);
+
+
+				System.out.println("response"+response);
 			}
 			System.out.println("response"+response);
-			
+
 			model.addAttribute("message", "Congratulations!, you have been successully registered.");
 			if(response!=null && response!="" && response.equalsIgnoreCase("fail")){
 				request="register";
 				model.addAttribute("message", "User already exist, please use another email-id.");
 			}
-			
+
 			//model.addAttribute("message", "Hello Spring WEB MVC!");
 			return request;
+
+		}
+
+		private String doRemoteRegister(ModelMap model, String firstName, String lastName , String email,  String password){
+
+			Result<String> result = backendService.createNewUser(firstName, lastName, email, password);
+			if (result.isError()){
+				//TODO: update this to handle the exace error. i.e. if there was a network error, we should state so
+				model.addAttribute("message", "User already exist, please use another email-id.");
+				return "register";
+			}
+			model.addAttribute("message", "Congratulations!, you have been successully registered.");
+			return "login";
 		}
 		
 		@RequestMapping(value="/getProduct", method = RequestMethod.GET)
