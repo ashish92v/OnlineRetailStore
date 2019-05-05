@@ -173,12 +173,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"Guest";
 				String name=session.getAttribute("name")!=null?session.getAttribute("name").toString():"Guest";
 				System.out.println("sessionCheck");
-				if(sessionCheck!=null){
-					String UserId=session.getAttribute("userId").toString();
-					Integer productCount=login.productCount(UserId);
-					model.addAttribute("count",productCount);
-					model.addAttribute("user",name);
-				}
+				if(sessionCheck.equals("Guest")){
+                    model.addAttribute("count",0);
+                    model.addAttribute("user",name);
+				}else{
+                    String UserId=session.getAttribute("userId").toString();
+                    Integer productCount=login.productCount(UserId);
+                    model.addAttribute("count",productCount);
+                    model.addAttribute("user",name);
+                }
 			}
 			
 			return "aboutus";
