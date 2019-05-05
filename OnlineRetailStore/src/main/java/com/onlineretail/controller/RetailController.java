@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 					System.out.println("session+++++"+session);
 					sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"Guest";
 					System.out.println("sessionCheck");
-					if(sessionCheck!=null){
+					if(sessionCheck!=null && session.getAttribute("userId")!=null){
 						String UserId=session.getAttribute("userId").toString();
 						String name=session.getAttribute("name").toString();
 						Integer productCount=login.productCount(UserId);
@@ -172,12 +172,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"Guest";
 				String name=session.getAttribute("name")!=null?session.getAttribute("name").toString():"Guest";
 				System.out.println("sessionCheck");
-				if(sessionCheck!=null){
+				if(sessionCheck!=null && !sessionCheck.equalsIgnoreCase("Guest")){
 					String UserId=session.getAttribute("userId").toString();
 					Integer productCount=login.productCount(UserId);
 					model.addAttribute("count",productCount);
 					model.addAttribute("user",name);
+				}else{
+					model.addAttribute("count",0);
+					model.addAttribute("user","Guest");
+					
 				}
+			}else{
+				model.addAttribute("count",0);
+				model.addAttribute("user","Guest");
+				
 			}
 			
 			return "aboutus";
