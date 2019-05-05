@@ -1,13 +1,17 @@
 package com.onlineretail.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.onlineretail.pojo.Category;
+import com.onlineretail.pojo.Gadget;
 import com.onlineretail.pojo.Product;
 import com.onlineretail.service.BackendService;
+import com.onlineretail.util.Mapper;
 import com.onlineretail.util.Result;
 
 import com.onlineretail.pojo.Login;
@@ -28,13 +32,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 	@Controller
-	@RequestMapping("/hello")
-
 	public class RetailController {
 		@Autowired LoginService login;
 		@Autowired BackendService backendService;
-	//	HttpSession session=null;
-		
+
 		ApplicationContext ctx = 
 				new AnnotationConfigApplicationContext(Config.class);
 		MongoOperations mongoOperation = (MongoOperations) ctx.getBean("mongoTemplate");
@@ -565,8 +566,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 						*/	
 					}
 					else{
-						product=login.getAllGadget("ALL");
-						System.out.println("productId"+productId);	       
+
+                        Result<List<Product>> results = backendService.getSampleProducts(10);
+                        if (!results.isError()){
+                            List<Gadget> gadgetList = new ArrayList<Gadget>();
+                            List<Product> productList = results.getValue();
+                            for (Product currentProduct : productList) {
+                                gadgetList.add(Mapper.productToGadget(currentProduct));
+                            }
+                            String categoriesJSON = Mapper.gadgetListToJsonString(gadgetList);
+                            product = "{"+"\"gadget\""+":"+categoriesJSON+"}";
+                        }
+
+
+
+
+					  //  product=login.getAllGadget("ALL");
+						//System.out.println("productId"+productId);
 	/*		        	System.out.println("productId"+productId);
 						product="{\"gadget\": [{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" }]}";
 	*/		        }
@@ -601,6 +617,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 				
 				return product;
 				}
+
+
 		
 		@RequestMapping(value="/forgotPasswordReq", method = RequestMethod.GET)
 		public String passwordAssistance(ModelMap model,@RequestParam String username,HttpSession session){

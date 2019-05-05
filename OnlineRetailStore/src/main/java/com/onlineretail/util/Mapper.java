@@ -4,7 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlineretail.pojo.Category;
+import com.onlineretail.pojo.Gadget;
 import com.onlineretail.pojo.Product;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +68,50 @@ public class Mapper {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static Gadget productToGadget(Product product){
+        return new Gadget(product.getId(),
+                product.getId(),
+                product.getName(),
+                Double.toString(product.getPrice()),
+                product.getImages().get(0).get("name"),
+                product.getManufacturer(),
+                product.getModel(),
+                product.getDescription());
+    }
+
+    public static String gadgetListToJsonString(List<Gadget> gadgets){
+        //product="{\"gadget\": [{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//grinder.jpg\", \"name\": \"grinder\" },{ \"gadgetUrl\": \"img//television.jpg\", \"name\": \"television\" },{ \"gadgetUrl\": \"img//washingmachine.jpg\", \"name\": \"washingmachine\" },{ \"gadgetUrl\": \"img//camera.jpg\",\"name\":\"camera\"}  ,{ \"gadgetUrl\": \"img//phone2.jpg\", \"name\": \"phone2\" },  { \"gadgetUrl\": \"img//laptop.jpg\", \"name\": \"laptop\" }]}";
+
+        JSONArray jsonarray = new JSONArray();
+        for (Gadget currentGadget : gadgets) {
+            JSONObject jsonobj= new JSONObject();
+
+            try {
+                jsonobj.put("gadgetId",currentGadget.get_id());jsonobj.put("gadgetName", currentGadget.getGadgetName());
+                jsonobj.put("gadgetUrl", generateImageURL(currentGadget, false));
+                jsonobj.put("gadgetPrice", currentGadget.getGadgetPrice());
+                jsonobj.put("manufacture", currentGadget.getManufacture());
+                jsonobj.put("model", currentGadget.getModel());
+                jsonobj.put("description", currentGadget.getDescription());
+                jsonarray.put(jsonobj);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return jsonarray.toString();
+    }
+
+
+    private static String generateImageURL(Gadget gadget, boolean localHost){
+        if (localHost){
+            return null; //TODO: need to figure out what the local path will look like
+        }else{
+            //https://mt7.duckdns.org/api/v1/images/${product.id}/${product.images[0].get("name")}
+            return "https://mt7.duckdns.org/api/v1/images/"+ gadget.getGadgetId() + "/" + gadget.getGadgetUrl();
         }
     }
 }

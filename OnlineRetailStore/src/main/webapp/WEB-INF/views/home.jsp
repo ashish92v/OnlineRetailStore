@@ -82,7 +82,7 @@
 </script>
 
 <script>
-function productModal(id,product,image,price){
+function productModal(id,product,image,price,manufacture,model,description){
 	/* var product="LG";
 	var id="LGas";
 	var price="352";
@@ -105,17 +105,17 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 	'              <div class="carousel-inner" role="listbox">'+
 	'                <div class="carousel-item active">'+
 	'                  <img class="d-block w-100"'+
-	'                    src="${pageContext.request.contextPath}/'+image+'"'+
+	'                    src="'+image+'"'+
 	'                    alt="First slide">'+
 	'                </div>'+
 	'                <div class="carousel-item">'+
 	'                  <img class="d-block w-100"'+
-	'                 src="${pageContext.request.contextPath}/'+image+'"'+
+	'                 src="'+image+'"'+
 	'                    alt="Second slide">'+
 	'                </div>'+
 	'                <div class="carousel-item">'+
 	'                  <img class="d-block w-100"'+
-	'                   src="${pageContext.request.contextPath}/'+image+'"'+
+	'                   src="'+image+'"'+
 	'                    alt="Third slide">'+
 	'                </div>'+
 	'              </div>'+
@@ -151,7 +151,7 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 	'                  <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true"'+
 	'                    aria-controls="collapseOne1">'+
 	'                    <h5 class="mb-0">'+
-	'                      Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>'+
+	'                      '+manufacture+' - '+model+' <i class="fas fa-angle-down rotate-icon"></i>'+
 	'                    </h5>'+
 	'                  </a>'+
 	'                </div>'+
@@ -159,10 +159,7 @@ var modalCode='  <div class="modal-dialog modal-lg" role="document">'+
 	'                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1"'+
 	'                  data-parent="#accordionEx">'+
 	'                  <div class="card-body">'+
-	'                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad'+
-	'                    squid. 3'+
-	'                    wolf moon officia aute,'+
-	'                    non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.'+
+	'                    '+description+
 	'                  </div>'+
 	'                </div>'+
 	'              </div>'+
@@ -323,10 +320,13 @@ setInterval(function(){
        gadgetName=obj.gadget[i].gadgetName;
        gadgetUrl=obj.gadget[i].gadgetUrl;
        gadgetPrice=obj.gadget[i].gadgetPrice;
+       gadgetManufacture=obj.gadget[i].manufacture;
+       gadgeModel=obj.gadget[i].model;
+       gadgetDescription=obj.gadget[i].description;
 
       // alert("gadgetUrl"+gadgetUrl);
-	  htmlCode= htmlCode+'<li class="cd-item"><img src="${pageContext.request.contextPath}/'+gadgetUrl+'" alt="Item Preview">'+
-    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\')">Quick View</a></li>';
+	  htmlCode= htmlCode+'<li class="cd-item"><img src="'+gadgetUrl+'?height=200" alt="Item Preview">'+
+    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\',\''+gadgetManufacture+'\',\''+gadgeModel+'\',\''+gadgetDescription+'\')">Quick View</a></li>';
 
   	      finalCode=initialCode+htmlCode+'</ul></div>';
   	  //    alert("FinalHtmlCode"+finalCode);
@@ -451,7 +451,7 @@ setInterval(function(){
 	       gadgetPrice=obj.gadget[i].gadgetPrice;
 
 	  //     alert("gadgetUrl"+gadgetUrl);
-		  htmlCode= htmlCode+'<li class="cd-item"><img src="${pageContext.request.contextPath}/'+gadgetUrl+'" alt="Item Preview">'+
+		  htmlCode= htmlCode+'<li class="cd-item"><img src="'+gadgetUrl+'" alt="Item Preview">'+
 	    	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\')">Quick View</a></li>';
 
 	    	finalCode=initialCode+htmlCode+'</ul></div>';

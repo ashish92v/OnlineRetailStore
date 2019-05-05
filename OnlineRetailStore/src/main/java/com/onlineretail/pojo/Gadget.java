@@ -7,6 +7,9 @@ public class Gadget {
 	private String gadgetName;
 	private String gadgetPrice;
 	private String gadgetUrl;
+	private String manufacture;
+	private String model;
+	private String description;
 
 	public Gadget(){
 	}
@@ -19,6 +22,19 @@ public class Gadget {
 		this.gadgetPrice=gadgetPrice;
 		this.gadgetUrl=gadgetUrl;
 	}
+
+	public Gadget(String _id,String gadgetId,String gadgetName, String gadgetPrice,String gadgetUrl, String manufacture, String model, String description){
+		this._id=_id;
+		this.gadgetId=gadgetId;
+		this.gadgetName=gadgetName;
+		this.gadgetPrice=gadgetPrice;
+		this.gadgetUrl=gadgetUrl;
+		this.manufacture = manufacture;
+		this.model = model;
+		this.description = description;
+	}
+
+
 	
 	public String get_id() {
 		return _id;
@@ -53,6 +69,28 @@ public class Gadget {
 	public void setGadgetUrl(String gadgetUrl) {
 		this.gadgetUrl = gadgetUrl;
 	}
-	
-	
+
+	public String getManufacture() {
+		return manufacture;
+	}
+
+	public void setManufacture(String manufacture) {
+		this.manufacture = manufacture;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }
