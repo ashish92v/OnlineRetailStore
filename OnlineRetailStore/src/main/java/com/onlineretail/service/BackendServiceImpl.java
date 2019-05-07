@@ -3,6 +3,7 @@ package com.onlineretail.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onlineretail.pojo.CartProduct;
 import com.onlineretail.pojo.Category;
 import com.onlineretail.pojo.Product;
 import com.onlineretail.pojo.User;
@@ -10,6 +11,8 @@ import com.onlineretail.util.Mapper;
 import com.onlineretail.util.Result;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -172,16 +175,67 @@ public class BackendServiceImpl implements BackendService {
         }
     }
 
-    public Result<List<Map<String, Integer>>> getUserCart(String userToken) {
-        return null;
+    public Result<List<Map<String, Object>>> getUserCart(String userToken) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String userInfoURL = baseURL + usersEndpoint + "/" + "cart";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + userToken);
+            ResponseEntity<String> response =  restTemplate.exchange(userInfoURL, HttpMethod.GET, new HttpEntity("parameters", headers), String.class);
+            if (response.getStatusCode() != HttpStatus.OK){
+                return Result.error(response.getStatusCode().value());
+            }
+            List<Map<String, Object>> cartItems = Mapper.jsonToCartList(response.getBody());
+            return Result.ok(cartItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
     }
 
-    public Result<List<Map<String, Integer>>> updateUserCart(String productID, int quantity, String userToken) {
-        return null;
+    public Result<List<Map<String, Object>>> updateUserCart(String productID, int quantity, String userToken) {
+
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String userCartURL = baseURL + usersEndpoint + "/" + "cart";
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + userToken);
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+            body.add("product", productID);
+            body.add("quantity", Integer.toString(quantity));
+            HttpEntity entity = new HttpEntity(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(userCartURL, entity, String.class);
+            if (response.getStatusCode() != HttpStatus.OK){
+                return Result.error(response.getStatusCode().value());
+            }
+            List<Map<String, Object>> cartItems = Mapper.jsonToCartList(response.getBody());
+            return Result.ok(cartItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public Result<List<Map<String, Integer>>> deleteUserCart(String userToken) {
-        return null;
+    public Result<List<Map<String, Object>>> deleteUserCart(String userToken) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        final String userCartURL = baseURL + usersEndpoint + "/" + "cart";
+        try {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + userToken);
+            ResponseEntity<String> response =  restTemplate.exchange(userCartURL, HttpMethod.DELETE, new HttpEntity("parameters", headers), String.class);
+            if (response.getStatusCode() == HttpStatus.BAD_REQUEST || response.getStatusCode() != HttpStatus.OK){
+                return Result.error(response.getStatusCode().value());
+            }
+            List<Map<String, Object>> cartItems = Mapper.jsonToCartList(response.getBody());
+            return Result.ok(cartItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
     }
 
     private ResponseEntity<String> fetchJSON(String url) {

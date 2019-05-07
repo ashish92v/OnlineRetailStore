@@ -237,18 +237,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			
 			if(session!=null && session.getAttribute("username")!=null && session.getAttribute("username")!="" && !session.getAttribute("username").toString().equalsIgnoreCase("Guest") && cartID!=null && cartID!=""){
 				System.out.println("session+++++"+session);
-				sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"";
-				String UserId=session.getAttribute("userId").toString();
-				String name=session.getAttribute("name").toString();
-				System.out.println("UserId"+UserId);
-				System.out.println("sessionCheck"+sessionCheck);
-				String response=login.saveCart(cartID, UserId,product,image,price);
-				Integer productCount=login.productCount(UserId);
-				model.addAttribute("count",productCount);
-				model.addAttribute("user",name);
+				//sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"";
+				//String UserId=session.getAttribute("userId").toString();
+				//String name=session.getAttribute("name").toString();
+				//System.out.println("UserId"+UserId);
+				//System.out.println("sessionCheck"+sessionCheck);
+				//String response=login.saveCart(cartID, UserId,product,image,price);
+				//Integer productCount=login.productCount(UserId);
+				//model.addAttribute("count",productCount);
+				//model.addAttribute("user",name);
 
-				System.out.println("DB AddInCart response"+response);
-				model.addAttribute("msg","product added in cart");
+				//System.out.println("DB AddInCart response"+response);
+
+
+				String token = session.getAttribute("token").toString();
+				Result<List<Map<String, Object>>> result = backendService.updateUserCart(cartID, 1, token);
+                if (result.isError()){
+                    //handle error
+                }
+
+                Result<User> userResult = backendService.getUserInfo(token);
+                if (userResult.isError()){
+                    //handle error
+                }
+
+                model.addAttribute("count",result.getValue().size());
+                model.addAttribute("user",userResult.getValue().getFirstName());
+                model.addAttribute("msg","product added in cart");
+
+
 			}else
 			{
 				System.out.println("userlogin if block");
@@ -270,14 +287,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 			if(session!=null && session.getAttribute("username")!=null && session.getAttribute("username")!="" && !session.getAttribute("username").toString().equalsIgnoreCase("Guest") ){
 				System.out.println("session+++++"+session);
 				sessionCheck=session.getAttribute("username")!=null?session.getAttribute("username").toString():"";
-				String UserId=session.getAttribute("userId").toString();
-				String name=session.getAttribute("name").toString();
-				Integer productCount=login.productCount(UserId);
-				model.addAttribute("count",productCount);
+				//String UserId=session.getAttribute("userId").toString();
+				//String name=session.getAttribute("name").toString();
+				//Integer productCount=login.productCount(UserId);
 
-				System.out.println("UserId"+UserId);
+                String token = session.getAttribute("token").toString();
+                Result<List<Map<String, Object>>> result = backendService.getUserCart(token);
+                if (result.isError()){
+                    //handle error
+                }
+
+                Result<User> userResult = backendService.getUserInfo(token);
+                if (userResult.isError()){
+                    //handle error
+                }
+
+
+
+
+
+
+                model.addAttribute("count",result.getValue().size());
+
+				//System.out.println("UserId"+UserId);
 				System.out.println("sessionCheck"+sessionCheck);
-				model.addAttribute("user",name);
+				model.addAttribute("user",userResult.getValue().getFirstName());
 				
 			}else
 			{

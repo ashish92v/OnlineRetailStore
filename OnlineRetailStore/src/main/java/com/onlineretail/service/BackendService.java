@@ -34,10 +34,10 @@ public interface BackendService {
 
     Result<User> getUserInfo(String token);
 
-    Result<List<Map<String, Integer>>> getUserCart(String userToken);
+    Result<List<Map<String, Object>>> getUserCart(String userToken);
 
-    Result<List<Map<String, Integer>>> updateUserCart(String productID, int quantity, String userToken);
+    Result<List<Map<String, Object>>> updateUserCart(String productID, int quantity, String userToken);
 
-    Result<List<Map<String, Integer>>> deleteUserCart(String userToken);
+    Result<List<Map<String, Object>>> deleteUserCart(String userToken);
 
 }

@@ -3,16 +3,15 @@ package com.onlineretail.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onlineretail.pojo.Category;
-import com.onlineretail.pojo.Gadget;
-import com.onlineretail.pojo.Product;
-import com.onlineretail.pojo.User;
+import com.onlineretail.pojo.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Mapper {
 
@@ -80,6 +79,29 @@ public class Mapper {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static List<Map<String, Object>> jsonToCartList(String json){
+        List<Map<String, Object>>  cartItems = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode root = mapper.readTree(json);
+            if (root.isArray()){
+                cartItems = mapper.readValue(root.toString(), new TypeReference<List<Map<String, Object>>>(){});
+            }
+
+
+
+
+           // JsonNode docsNode = root.path("docs");
+            //if (docsNode.isArray()){
+             //   cartItems = mapper.readValue(docsNode.toString(), new TypeReference<List<Map<String, Object>>>(){});
+            //}
+            return cartItems;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
         }
     }
 

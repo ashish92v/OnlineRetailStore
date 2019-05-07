@@ -325,7 +325,7 @@ setInterval(function(){
        gadgetDescription=obj.gadget[i].description;
 
       // alert("gadgetUrl"+gadgetUrl);
-	  htmlCode= htmlCode+'<li class="cd-item"><img src="'+gadgetUrl+'?height=200" alt="Item Preview">'+
+	  htmlCode= htmlCode+'<li class="cd-item"><img src="'+gadgetUrl+'?height=700" alt="Item Preview">'+
     	'<a href="#0" class="cd-trigger" data-toggle="modal" data-target="#modalQuickView" onclick="productModal(\''+gadgetId+'\',\''+gadgetName+'\',\''+gadgetUrl+'\',\''+gadgetPrice+'\',\''+gadgetManufacture+'\',\''+gadgeModel+'\',\''+gadgetDescription+'\')">Quick View</a></li>';
 
   	      finalCode=initialCode+htmlCode+'</ul></div>';
